@@ -24,10 +24,10 @@
  */
 
 
-#define en_1 BIT0
-#define en_2 BIT3
-#define en_3 BIT4
-#define en_4 BIT5
+#define right_reverse BIT0   //Nomeando os enables.
+#define right_forward BIT3
+#define left_reverse BIT4
+#define left_forward BIT5
 
 #define PWM_R BIT6
 #define PWM_L BIT7
@@ -35,7 +35,7 @@
 // Variáveis globais
 unsigned int T0 = 0;
 unsigned int Pulse_1 = 0, Pulse_2 = 0;
-int coord_X = 0,coord_Y = 0;
+int coord_X = 0,coord_Y = 0,R,L;        //Definindo R e L constantes inteiras
 
 // Funções
 void Fail_safe(void){
@@ -109,6 +109,73 @@ int main(void) {
         //if (enable != 0){
             coord_X = map(Pulse_1,1000,2000,-255,255);
             coord_Y = map(Pulse_2,1000,2000,-255,255);
+		
+		//------------Controle de coordenadas--------------
+
+if(coord_X >= -20 && coord_X <= 20 && coord_Y >= -20 && coord_Y <= 20){ // --> Nessa configuração, valores entre os intervalos(-10,10) serão considerados como Zero.
+  L = 0;                                                                // Isso foi feito para desligar os dois motores quando a alavanda estiver na "posição 0",
+  R = 0;                                                                // visto que o sinal sofre variação de até -8 a 8 na posição inicial do "joystick".                                          //   bô será giratório, de 0 a 360°. Isso será feito com os motores ligados em sentidos opostos.
+}else if(coord_X > 20 || coord_X < -20 || coord_Y > 20 || coord_Y < -20){
+  if(coord_X < 0 && coord_Y < 0 && (coord_X >= coord_Y)){
+    R = coord_Y;
+    L = coord_Y - coord_X;
+  }else if(coord_X < 0 && coord_Y > 0 && (coord_Y >= - coord_X)){
+    R = coord_Y;
+    L = coord_Y + coord_X;
+  }else if(coord_X < 0 && coord_Y > 0 && (coord_Y < - coord_X)){
+    R = - coord_X;
+    L = coord_Y + coord_X;
+  }else if(coord_X > 0 && coord_Y < 0 && ( - coord_Y >= coord_X)){
+    R = coord_Y  + coord_X;
+    L = coord_Y;
+  }else if(coord_X > 0 && coord_Y > 0 && (coord_Y >= coord_X)){
+    R = coord_Y - coord_X;
+    L = coord_Y; 
+  }else if(coord_X > 0 && coord_Y > 0 && (coord_Y < coord_X)){
+    R = coord_Y - coord_X;
+    L = coord_X; 
+  }    
+}else{
+  R = 0;
+  L = 0;
+}
+//Falta traduzir....
+//------------------------------------
+// Descomente para testar os valores enviados às portas. 
+//Serial.print("MOTOR_L:");
+//Serial.print("    ");
+//Serial.println("MOTOR_R:");
+//Serial.print(L);
+//Serial.print("         ");
+//Serial.println(R);
+				
+		if(R < 0){
+			Bit 0 = 1;
+			BIT 3 = 0;
+			BIT 6 =(R*-1);  // Não tenho certeza sobre esse comando, pelo que entendi é assim
+		}
+		else if(R > 0){
+			BIT 0 = 0;
+			BIT 3 = 1; 
+			BIT 6 = R;  // Não tenho certeza sobre esse comando, pelo que entendi é assim
+		}
+		if(L > 0){
+		BIT 4= 1;
+		BIT 5 = 1;
+		BIT 7 = L;  //Não tenho certeza sobre esse comando, pelo que entendi é assim
+		}
+		if(L < 0){
+		BIT 4 = 1;
+		BIT 5 = 0;
+		bit 7 = L*-1;  // Não tenho certeza sobre esse comando, pelo que entendi é assim
+		}
+		if(L == 0 || R == 0){
+		BIT 4 = 0;
+		BIT 5 = 0;  
+		BIT 0 = 0;
+		BIT 3 = 0;  
+		}
+		}
 
         //}else{
         //    Fail_safe();
