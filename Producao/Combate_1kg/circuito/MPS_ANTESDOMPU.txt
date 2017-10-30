@@ -1,0 +1,47 @@
+#pragma vector = USCIAB0TX_VECTOR
+__interrupt void USCIAB0TX_ISR(void)
+{
+
+    if(UCB0CTL1 & UCTR)                 // TX mode (UCTR == 1)
+    {
+        if (TX_ByteCtr)                     // TRUE if more bytes remain
+        {
+            TX_ByteCtr--;               // Decrement TX byte counter
+            UCB0TXBUF = TX_Data[TX_ByteCtr];    // Load TX buffer
+        }
+        else                        // no more bytes to send
+        {
+            UCB0CTL1 |= UCTXSTP;            // I2C stop condition
+            IFG2 &= ~UCB0TXIFG;         // Clear USCI_B0 TX int flag
+
+            __bic_SR_register_on_exit(CPUOFF);  // Exit LPM0
+
+            //-------------change_map-------------//
+            portalIndex ++;
+            if(portalIndex == 8)
+            {
+                portalIndex = 0;
+            }
+            portalY = (portalY << 1);
+            if(portalY == 128)
+                portalY = 0x02;
+            portalX ^= 0b10000001;
+            //------------------------------------//
+        }
+    }
+    else // (UCTR == 0)                 // RX mode
+    {
+        RX_ByteCtr--;                       // Decrement RX byte counter
+        if (RX_ByteCtr)                     // RxByteCtr != 0
+        {
+            RX_Data[RX_ByteCtr] = UCB0RXBUF;    // Get received byte
+            if (RX_ByteCtr == 1)            // Only one byte left?
+            UCB0CTL1 |= UCTXSTP;            // Generate I2C stop condition
+        }
+        else                        // RxByteCtr == 0
+        {
+            RX_Data[RX_ByteCtr] = UCB0RXBUF;    // Get final received byte
+            __bic_SR_register_on_exit(CPUOFF);  // Exit LPM0
+        }
+    }
+}
