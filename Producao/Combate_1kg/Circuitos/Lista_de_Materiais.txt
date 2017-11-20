@@ -1,0 +1,38 @@
+
+----------------------------------------------------------------------
+Componentes principais para um projeto de combate 1k4:
+----------------------------------------------------------------------
+Rodas aderentes 60x10mm (nefeltech ou tamanho semelhante);
+Microcontrolador;
+Sensor de inversão (acelerômetro);
+Baterias LiPo 2200mAh/20C ou 1200mAh/50C;
+Motores 5V 330Rpm com caixa de redução;
+Motor Brushless 2kV 350W;
+receptores ou transreceptores RF(no caso de 2,4GHz);
+cristais osciladores a partir de 72Mhz(não necessários para 2,4GHz);
+Rádio controle (2,4GHz, 72Mhz, ...);
+Interruptores de alta corrente;
+Ponte-h + ESC + Lógica de controle;
+----------------------------------------------------------------------
+Materiais de estoque:
+----------------------------------------------------------------------
+MSP430G2553;
+ATMEGA328P;
+PIC18FXX;
+PIC16FXX;
+MPU6050;
+Conectores tipo XT e XT60;
+Conectores "gold bullet";
+Conectores barra pin(macho e fêmea);
+Conectores KK
+Conectores Borne;
+Conectores Jumper com alça;
+Fios AWG XX flexível;
+Fita isolante;
+Isolantes(EVA/BORRACHA);
+Materiais impressão 3D ABS/PETG (incolor);
+Capacitores diversos;
+Resistores diversos;
+Fusíveis;
+Sensores de corrente;
+Diodos schottky (2A);
