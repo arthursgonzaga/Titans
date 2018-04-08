@@ -1,4 +1,0 @@
-impressora 3D
-
-20x20x18cm
-(Largura,comprimento,altura)
