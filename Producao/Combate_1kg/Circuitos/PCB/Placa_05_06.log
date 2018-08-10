@@ -1,0 +1,12 @@
+# Writing all output to: C:\Users\gilva\OneDrive\UnB\Titans\Producao\Combate_1kg\PCB\Placa_05_06.log
+set pad_wire_necking on
+bus diagonal
+fanout 5
+route 50
+clean 2
+route 50 16
+clean 2
+filter 5
+recorner diagonal
+status_file
+
